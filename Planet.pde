@@ -22,6 +22,7 @@ class Planet {
     PVector dif = PVector.sub(other.pos, pos);
     float d = dif.mag();
     float f = 0;
+    if(d <= 0.01) return;
     if(d < other.r * 0.3 + r) {
       f += pRepelMul * ((other.r * 0.3 + r) - d);
     }

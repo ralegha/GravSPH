@@ -38,12 +38,12 @@ void setup() {
     particles.add(new Particle(new PVector(random(0, 0.3 * width), random(0, height)),
                                 new PVector(0, 0), 12, 3, color(80, 80, 200), false, false, false, 1.5));
   }
-  for(int i = 0; i < 210; i++) {
-    particles.add(new Particle(new PVector(random(0, 0.3 * width), random(0, height)),
-                                new PVector(0, 0), 9, 0.1, color(190, 190, 210), false, false, false, 1.5));
-  }
+  //for(int i = 0; i < 210; i++) {
+  //  particles.add(new Particle(new PVector(random(0, 0.3 * width), random(0, height)),
+  //                              new PVector(0, 0), 9, 0.1, color(190, 190, 210), false, false, false, 1.5));
+  //}
   planets = new ArrayList<Planet>();
-  planets.add(new Planet(new PVector(400, 300), 400, 50));
+  planets.add(new Planet(new PVector(400, 300), 800, 50));
   planets.add(new Planet(new PVector(1000, 300), 8000, 5));
   fill(80, 80, 220);
   noStroke();
@@ -112,6 +112,7 @@ void draw() {
   background(255);
   for(Particle particle: particles) {
     particle.show();
+    println(particle.pos);
   }
   for(Planet planet: planets) {
     planet.show();
