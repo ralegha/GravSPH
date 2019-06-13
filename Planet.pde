@@ -1,6 +1,6 @@
 
-final float gravMul = 1;
-final float pRepelMul = 1;
+final float gravMul = 1; // Planet gravity multiplier
+final float pRepelMul = 1; // Planet repel multiplier
 
 class Planet {
   PVector pos;
@@ -14,7 +14,7 @@ class Planet {
   
   void particleInteract(ArrayList<Particle> particles) {
     for(Particle other: particles) {
-      interact(other); 
+      interact(other); // Compute gravity and repulsion for each particle 
     }
   }
   
@@ -22,13 +22,13 @@ class Planet {
     PVector dif = PVector.sub(other.pos, pos);
     float d = dif.mag();
     float f = 0;
-    if(d <= 0.01) return;
-    if(d < other.r * 0.3 + r) {
+    if(d <= 0.01) return; // Trying to prevent NaNpocalypse
+    if(d < other.r * 0.3 + r) { // Particle is inside planet: need to push it away
       f += pRepelMul * ((other.r * 0.3 + r) - d);
     }
-    f -= (gravMul * mass * other.m) / (d * d);
+    f -= (gravMul * mass * other.m) / (d * d); // Compute gravity
         
-    other.force.add(PVector.mult(dif, f / d));
+    other.force.add(PVector.mult(dif, f / d)); // Dividing by the distance to normalise difference
   }
   
   void show() {
