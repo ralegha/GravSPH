@@ -1,12 +1,12 @@
 
-final float dT = 0.005;
-final float k = 1;
-final float g = 0.6;
-final float maxVel = 70;
-final float visc = 0.007;
-final float visc2 = 0.00004;
-final float repelMul = 10;
-final float wallRepelMul = 40;
+final float dT = 0.005; // Time step
+final float k = 1; // Fluid multiplier thing (havent messed much with it)
+final float g = 0.6; // Gravitational constant
+final float maxVel = 70; // Velocity limit for particles
+final float visc = 0.007; // Viscosity
+final float visc2 = 0.00004; // Surface tension viscosity
+final float repelMul = 10; // Repulsion against planets
+final float wallRepelMul = 40; // Repulsion against walls
 
 class Particle {
   boolean isSolid, isStatic;
@@ -37,6 +37,7 @@ class Particle {
   void move() {
     vel.add(PVector.div(force, m));
     
+    // Bounce off walls    
     if(pos.y > height)
       vel.y -= wallRepelMul * sq(pos.y - height);
     else if(pos.y < 0)
@@ -46,9 +47,11 @@ class Particle {
     else if(pos.x < 0)
       vel.x += wallRepelMul * sq(pos.x);
     
+    // Not planet based gravity but general downwards gravity
     if(gravitate)
       vel.y += g;
     
+    // Limit velocity
     float vmag2 = vel.x * vel.x + vel.y * vel.y;
     if(vmag2 > maxVel * maxVel) {
       vel.mult(maxVel / sqrt(vmag2)); 
@@ -68,6 +71,7 @@ class Particle {
     PVector dif;
     float dens = 0, densNear = 0;
     
+    // SPH calculations
     for(int i = particles.size() - 1; i >= 0; i--) {
       other = particles.get(i);
       if(other == this) continue;
@@ -92,6 +96,7 @@ class Particle {
           float overlap = (r + other.r - d) / d;
           f = repelMul * overlap;
         } else {
+          // Compute force based on difference between correct density and current density
           f = q * (pres + other.pres) + q2 * (presNear + other.presNear);
           f -= visc2 / d2;
         }
@@ -107,11 +112,13 @@ class Particle {
         
       }
     }
+    // Compute pressure from density
     pres = k * (dens - baseDens);
     presNear = k * (densNear);
   }
   
   void show2() {
+    // Looks like voxels
     fill(c);
     float dR = (isSolid) ? 2 * r : 0.3 * r;
     float mul = 16;
@@ -124,6 +131,7 @@ class Particle {
   }
   
   void show() {
+    // Draw as particles
     fill(c);
     float dR = (isSolid) ? 2 * r : 0.3 * r;
     ellipse(pos.x, pos.y, dR, dR); 
